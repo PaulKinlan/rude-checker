@@ -42,6 +42,13 @@ document.addEventListener('DOMContentLoaded', () => {
         resultHeader.textContent = `Results for "${productName}"`;
         resultsDiv.appendChild(resultHeader);
 
+        // Display LLM analysis
+        const llmAnalysisDiv = document.createElement('div');
+        llmAnalysisDiv.classList.add('result-section');
+        llmAnalysisDiv.innerHTML = '<h3>LLM Analysis</h3>';
+        llmAnalysisDiv.innerHTML += `<p>${results.llm_analysis}</p>`;
+        resultsDiv.appendChild(llmAnalysisDiv);
+
         // Display literal matches
         const literalMatchesDiv = document.createElement('div');
         literalMatchesDiv.classList.add('result-section');

@@ -4,12 +4,18 @@ import logging
 import jellyfish
 import random
 import string
+import google.generativeai as genai
+import os
 
 app = Flask(__name__)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Set up the Gemini API
+genai.configure(api_key=os.environ['GEMINI_API_KEY'])
+model = genai.GenerativeModel('gemini-pro')
 
 def is_offensive(text, lang_code):
     logger.debug(f"Checking if '{text}' is offensive in {lang_code}")
@@ -42,6 +48,11 @@ def generate_alternative_names(product_name, num_suggestions=3):
             alternatives.add(alternative)
     return list(alternatives)
 
+def check_offensive_content_llm(text):
+    prompt = f"Analyze the following product name for any offensive, rude, or culturally inappropriate meanings across different languages and cultures. If it's problematic, explain why. If it's not, just say it's fine: {text}"
+    response = model.generate_content(prompt)
+    return response.text
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -52,7 +63,8 @@ def check_product_name():
     results = {
         "literal_matches": [],
         "phonetic_matches": [],
-        "alternative_suggestions": []
+        "alternative_suggestions": [],
+        "llm_analysis": check_offensive_content_llm(product_name)
     }
 
     # Check for literal matches
