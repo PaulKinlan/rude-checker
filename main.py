@@ -8,6 +8,9 @@ translator = Translator()
 # Supported languages for translation
 supported_languages = list(offensive_words.keys())
 
+def contains_offensive_word(text, word_list):
+    return any(offensive_word in text for offensive_word in word_list)
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -26,8 +29,8 @@ def check_product_name():
             # Get the language name
             lang_name = translation.dest
 
-            # Check for offensive words
-            is_offensive = any(word in translated_name for word in offensive_words.get(lang_name, []))
+            # Check for offensive words using partial matching
+            is_offensive = contains_offensive_word(translated_name, offensive_words.get(lang_name, []))
 
             results[lang_name] = {
                 "translation": translated_name,
