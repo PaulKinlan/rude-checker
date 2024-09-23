@@ -6,6 +6,7 @@ import random
 import string
 import google.generativeai as genai
 import os
+from google.generativeai.types import GenerateContentResponse
 
 app = Flask(__name__)
 
@@ -51,7 +52,12 @@ def generate_alternative_names(product_name, num_suggestions=3):
 def check_offensive_content_llm(text):
     prompt = f"Analyze the following product name for any offensive, rude, or culturally inappropriate meanings across different languages and cultures. If it's problematic, explain why. If it's not, just say it's fine: {text}"
     response = model.generate_content(prompt)
-    return response.text
+    
+    if isinstance(response, GenerateContentResponse):
+        return response.text
+    else:
+        # Handle the case where the response is not of the expected type
+        return "Error: Unable to analyze the content"
 
 @app.route("/")
 def index():
