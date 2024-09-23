@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const results = await response.json();
-            console.log('Received results:', results); // Add this line for debugging
+            console.log('Received results:', results);
             displayResults(results);
         } catch (error) {
             console.error('Error:', error);
@@ -41,11 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
         alternativesDiv.innerHTML = '';
         let isOffensive = false;
 
-        console.log('Displaying results:', results); // Add this line for debugging
+        console.log('Displaying results:', results);
 
         for (const [language, data] of Object.entries(results)) {
             if (language === 'alternative_suggestions') {
-                console.log('Alternative suggestions:', data); // Add this line for debugging
+                console.log('Alternative suggestions:', data);
                 continue;
             }
 
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (isOffensive && results.alternative_suggestions) {
-            console.log('Displaying alternative suggestions:', results.alternative_suggestions); // Add this line for debugging
+            console.log('Displaying alternative suggestions:', results.alternative_suggestions);
             const alternativesHeader = document.createElement('h3');
             alternativesHeader.textContent = 'Alternative Suggestions:';
             alternativesDiv.appendChild(alternativesHeader);
@@ -85,6 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 alternativesList.appendChild(listItem);
             });
             alternativesDiv.appendChild(alternativesList);
+        } else {
+            console.log('No alternative suggestions to display');
         }
     }
 });
