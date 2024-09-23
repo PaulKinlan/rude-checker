@@ -1,19 +1,12 @@
 from flask import Flask, render_template, request, jsonify
 from googletrans import Translator
+from offensive_words import offensive_words
 
 app = Flask(__name__)
 translator = Translator()
 
-# In-memory dictionary of offensive words in different languages
-# In a production environment, this would be stored in a database
-offensive_words = {
-    "english": ["offensive1", "offensive2", "offensive3"],
-    "spanish": ["ofensivo1", "ofensivo2", "ofensivo3"],
-    "french": ["offensant1", "offensant2", "offensant3"]
-}
-
 # Supported languages for translation
-supported_languages = ["english", "spanish", "french"]
+supported_languages = list(offensive_words.keys())
 
 @app.route("/")
 def index():
