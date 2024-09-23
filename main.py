@@ -87,6 +87,10 @@ def check_product_name():
         alternative_suggestions = generate_alternative_names(product_name)
         results["alternative_suggestions"] = alternative_suggestions
 
+    # Add print statements for debugging
+    print(f"Is offensive in any language: {is_offensive_in_any_language}")
+    print(f"Alternative suggestions: {results.get('alternative_suggestions', 'No suggestions')}")
+
     return jsonify(results)
 
 if __name__ == "__main__":

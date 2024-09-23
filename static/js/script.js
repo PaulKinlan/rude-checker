@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const results = await response.json();
+            console.log('Received results:', results); // Add this line for debugging
             displayResults(results);
         } catch (error) {
             console.error('Error:', error);
@@ -40,8 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
         alternativesDiv.innerHTML = '';
         let isOffensive = false;
 
+        console.log('Displaying results:', results); // Add this line for debugging
+
         for (const [language, data] of Object.entries(results)) {
-            if (language === 'alternative_suggestions') continue;
+            if (language === 'alternative_suggestions') {
+                console.log('Alternative suggestions:', data); // Add this line for debugging
+                continue;
+            }
 
             const resultItem = document.createElement('div');
             resultItem.classList.add('result-item');
@@ -67,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (isOffensive && results.alternative_suggestions) {
+            console.log('Displaying alternative suggestions:', results.alternative_suggestions); // Add this line for debugging
             const alternativesHeader = document.createElement('h3');
             alternativesHeader.textContent = 'Alternative Suggestions:';
             alternativesDiv.appendChild(alternativesHeader);
