@@ -62,13 +62,19 @@ def check_offensive_content_llm(text):
                 return response.candidates[0].content.parts[0].text
             else:
                 logger.warning(f"Empty response from Gemini API for text: {text}")
-                return "The AI model couldn't generate a response. Please try again."
+                return fallback_offensive_check(text)
         else:
             logger.error(f"Unexpected response type from Gemini API: {type(response)}")
-            return "Unexpected response type from the AI model. Please try again."
+            return fallback_offensive_check(text)
     except Exception as e:
         logger.error(f"Error in LLM analysis for text '{text}': {str(e)}")
-        raise  # Re-raise the exception to trigger a retry
+        return fallback_offensive_check(text)
+
+def fallback_offensive_check(text):
+    offensive_langs = [lang for lang, words in offensive_words.items() if text.lower() in words]
+    if offensive_langs:
+        return f"This word is considered offensive in the following languages: {', '.join(offensive_langs)}."
+    return "No offensive meanings found in our database, but please note this check is limited."
 
 @app.route("/")
 def index():

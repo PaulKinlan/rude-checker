@@ -42,11 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
         resultHeader.textContent = `Results for "${productName}"`;
         resultsDiv.appendChild(resultHeader);
 
-        // Display LLM analysis
+        // Display LLM analysis or fallback
         const llmAnalysisDiv = document.createElement('div');
         llmAnalysisDiv.classList.add('result-section');
-        llmAnalysisDiv.innerHTML = '<h3>LLM Analysis</h3>';
-        llmAnalysisDiv.innerHTML += `<p>${results.llm_analysis}</p>`;
+        llmAnalysisDiv.innerHTML = '<h3>Content Analysis</h3>';
+        if (results.llm_analysis.includes("No offensive meanings found in our database")) {
+            llmAnalysisDiv.innerHTML += `<p>${results.llm_analysis}</p>`;
+            llmAnalysisDiv.innerHTML += '<p><em>Note: This is a fallback response due to temporary unavailability of our advanced analysis system.</em></p>';
+        } else {
+            llmAnalysisDiv.innerHTML += `<p>${results.llm_analysis}</p>`;
+        }
         resultsDiv.appendChild(llmAnalysisDiv);
 
         // Display literal matches
