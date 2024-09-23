@@ -8,7 +8,7 @@ translator = Translator()
 nlp = spacy.load("en_core_web_sm")
 
 # Supported languages for translation
-supported_languages = list(offensive_words.keys())
+supported_languages = ["english", "spanish", "french", "german", "italian", "japanese", "chinese", "russian"]
 
 def contains_offensive_word(text, word_list):
     return any(offensive_word in text for offensive_word in word_list)
