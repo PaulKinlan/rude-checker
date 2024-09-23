@@ -36,11 +36,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayResults(results) {
         resultsDiv.innerHTML = '';
-        for (const [language, isOffensive] of Object.entries(results)) {
+        for (const [language, data] of Object.entries(results)) {
             const resultItem = document.createElement('div');
             resultItem.classList.add('result-item');
-            resultItem.classList.add(isOffensive ? 'offensive' : 'safe');
-            resultItem.textContent = `${language.charAt(0).toUpperCase() + language.slice(1)}: ${isOffensive ? 'Potentially offensive' : 'Safe'}`;
+            resultItem.classList.add(data.is_offensive ? 'offensive' : 'safe');
+            
+            const languageHeader = document.createElement('h3');
+            languageHeader.textContent = language.charAt(0).toUpperCase() + language.slice(1);
+            resultItem.appendChild(languageHeader);
+
+            const translationPara = document.createElement('p');
+            translationPara.textContent = `Translation: ${data.translation}`;
+            resultItem.appendChild(translationPara);
+
+            const offensivePara = document.createElement('p');
+            offensivePara.textContent = data.is_offensive ? 'Potentially offensive' : 'Safe';
+            resultItem.appendChild(offensivePara);
+
             resultsDiv.appendChild(resultItem);
         }
     }

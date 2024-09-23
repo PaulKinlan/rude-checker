@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, jsonify
+from googletrans import Translator
 
 app = Flask(__name__)
+translator = Translator()
 
 # In-memory dictionary of offensive words in different languages
 # In a production environment, this would be stored in a database
@@ -9,6 +11,9 @@ offensive_words = {
     "spanish": ["ofensivo1", "ofensivo2", "ofensivo3"],
     "french": ["offensant1", "offensant2", "offensant3"]
 }
+
+# Supported languages for translation
+supported_languages = ["en", "es", "fr"]
 
 @app.route("/")
 def index():
@@ -19,9 +24,19 @@ def check_product_name():
     product_name = request.json["product_name"].lower()
     results = {}
 
-    for language, words in offensive_words.items():
-        is_offensive = any(word in product_name for word in words)
-        results[language] = is_offensive
+    for lang_code in supported_languages:
+        # Translate the product name
+        translation = translator.translate(product_name, dest=lang_code)
+        translated_name = translation.text.lower()
+
+        # Check for offensive words
+        lang_name = translation.dest_lang
+        is_offensive = any(word in translated_name for word in offensive_words.get(lang_name, []))
+
+        results[lang_name] = {
+            "translation": translated_name,
+            "is_offensive": is_offensive
+        }
 
     return jsonify(results)
 

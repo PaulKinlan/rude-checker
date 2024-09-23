@@ -57,19 +57,30 @@ button:hover {
 }
 
 .result-item {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.result-item h3 {
+    margin-top: 0;
     margin-bottom: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 3px;
+    color: #333;
+}
+
+.result-item p {
+    margin: 0.25rem 0;
 }
 
 .result-item.offensive {
     background-color: #ffcccb;
-    color: #d8000c;
+    border-left: 5px solid #d8000c;
 }
 
 .result-item.safe {
     background-color: #dff0d8;
-    color: #4caf50;
+    border-left: 5px solid #4caf50;
 }
 
 @media (max-width: 480px) {
