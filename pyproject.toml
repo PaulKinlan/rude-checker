@@ -14,6 +14,7 @@ en-core-web-sm = {url = "https://github.com/explosion/spacy-models/releases/down
 nltk = "^3.9.1"
 jellyfish = "^1.1.0"
 google-generativeai = "^0.8.1"
+tenacity = "^9.0.0"
 
 
 [build-system]

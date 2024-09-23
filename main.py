@@ -7,6 +7,8 @@ import string
 import google.generativeai as genai
 import os
 from google.generativeai.types import GenerateContentResponse
+from tenacity import retry, stop_after_attempt, wait_exponential
+import time
 
 app = Flask(__name__)
 
@@ -49,6 +51,7 @@ def generate_alternative_names(product_name, num_suggestions=3):
             alternatives.add(alternative)
     return list(alternatives)
 
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
 def check_offensive_content_llm(text):
     prompt = f"Analyze the following product name for any offensive, rude, or culturally inappropriate meanings across different languages and cultures. If it's problematic, explain why. If it's not, just say it's fine: {text}"
     try:
@@ -58,12 +61,14 @@ def check_offensive_content_llm(text):
             if response.candidates and response.candidates[0].content.parts:
                 return response.candidates[0].content.parts[0].text
             else:
+                logger.warning(f"Empty response from Gemini API for text: {text}")
                 return "The AI model couldn't generate a response. Please try again."
         else:
+            logger.error(f"Unexpected response type from Gemini API: {type(response)}")
             return "Unexpected response type from the AI model. Please try again."
     except Exception as e:
-        logger.error(f"Error in LLM analysis: {str(e)}")
-        return f"An error occurred during analysis: {str(e)}"
+        logger.error(f"Error in LLM analysis for text '{text}': {str(e)}")
+        raise  # Re-raise the exception to trigger a retry
 
 @app.route("/")
 def index():
