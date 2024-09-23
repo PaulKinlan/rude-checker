@@ -13,7 +13,7 @@ offensive_words = {
 }
 
 # Supported languages for translation
-supported_languages = ["en", "es", "fr"]
+supported_languages = ["english", "spanish", "french"]
 
 @app.route("/")
 def index():
@@ -25,18 +25,28 @@ def check_product_name():
     results = {}
 
     for lang_code in supported_languages:
-        # Translate the product name
-        translation = translator.translate(product_name, dest=lang_code)
-        translated_name = translation.text.lower()
+        try:
+            # Translate the product name
+            translation = translator.translate(product_name, dest=lang_code)
+            translated_name = translation.text.lower()
 
-        # Check for offensive words
-        lang_name = translation.dest_lang
-        is_offensive = any(word in translated_name for word in offensive_words.get(lang_name, []))
+            # Get the language name
+            lang_name = translation.dest
 
-        results[lang_name] = {
-            "translation": translated_name,
-            "is_offensive": is_offensive
-        }
+            # Check for offensive words
+            is_offensive = any(word in translated_name for word in offensive_words.get(lang_name, []))
+
+            results[lang_name] = {
+                "translation": translated_name,
+                "is_offensive": is_offensive
+            }
+        except Exception as e:
+            # Log the error and continue with the next language
+            print(f"Error translating to {lang_code}: {str(e)}")
+            results[lang_code] = {
+                "translation": "Translation failed",
+                "is_offensive": False
+            }
 
     return jsonify(results)
 
