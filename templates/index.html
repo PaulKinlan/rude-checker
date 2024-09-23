@@ -9,13 +9,19 @@
 <body>
     <div class="container">
         <h1>Product Name Checker</h1>
-        <p>Check your product name for translations and offensive meanings across multiple languages and cultures.</p>
+        <p>Check your product name for offensive meanings across multiple languages and cultures.</p>
+        <div class="explanation">
+            <h3>How it works:</h3>
+            <ol>
+                <li><strong>Literal Check:</strong> We check if your product name exactly matches any known offensive words in various languages.</li>
+                <li><strong>Phonetic Check:</strong> We also check if your product name sounds similar to offensive words, even if spelled differently.</li>
+            </ol>
+        </div>
         <div class="input-group">
             <input type="text" id="productName" placeholder="Enter product name">
             <button id="checkButton">Check</button>
         </div>
         <div id="results" class="results"></div>
-        <div id="alternatives" class="alternatives"></div>
     </div>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>

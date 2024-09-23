@@ -19,9 +19,19 @@ body {
     width: 100%;
 }
 
-h1 {
-    text-align: center;
+h1, h2, h3 {
     color: #333;
+}
+
+.explanation {
+    background-color: #e9ecef;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.explanation ol {
+    padding-left: 1.5rem;
 }
 
 .input-group {
@@ -52,43 +62,29 @@ button:hover {
     background-color: #0056b3;
 }
 
-.results, .alternatives {
+.results {
     margin-top: 1rem;
 }
 
-.result-item {
+.result-section {
     margin-bottom: 1rem;
     padding: 1rem;
     border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+    border-left: 5px solid #007bff;
 }
 
-.result-item h3, .alternatives h3 {
+.result-section h3 {
     margin-top: 0;
-    margin-bottom: 0.5rem;
-    color: #333;
+    color: #007bff;
 }
 
-.result-item p {
-    margin: 0.25rem 0;
-}
-
-.result-item.offensive {
-    background-color: #ffcccb;
-    border-left: 5px solid #d8000c;
-}
-
-.result-item.safe {
-    background-color: #dff0d8;
-    border-left: 5px solid #4caf50;
-}
-
-.alternatives ul {
+.result-section ul {
     list-style-type: none;
     padding-left: 0;
 }
 
-.alternatives li {
+.result-section li {
     margin-bottom: 0.5rem;
     padding: 0.5rem;
     background-color: #e9ecef;
