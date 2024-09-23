@@ -51,14 +51,19 @@ def generate_alternative_names(product_name, num_suggestions=3):
 
 def check_offensive_content_llm(text):
     prompt = f"Analyze the following product name for any offensive, rude, or culturally inappropriate meanings across different languages and cultures. If it's problematic, explain why. If it's not, just say it's fine: {text}"
-    response = model.generate_content(prompt)
-    
-    if isinstance(response, GenerateContentResponse):
-        # Access the text content from the first candidate
-        return response.candidates[0].content.parts[0].text
-    else:
-        # Handle the case where the response is not of the expected type
-        return "Error: Unable to analyze the content"
+    try:
+        response = model.generate_content(prompt)
+        
+        if isinstance(response, GenerateContentResponse):
+            if response.candidates and response.candidates[0].content.parts:
+                return response.candidates[0].content.parts[0].text
+            else:
+                return "The AI model couldn't generate a response. Please try again."
+        else:
+            return "Unexpected response type from the AI model. Please try again."
+    except Exception as e:
+        logger.error(f"Error in LLM analysis: {str(e)}")
+        return f"An error occurred during analysis: {str(e)}"
 
 @app.route("/")
 def index():
