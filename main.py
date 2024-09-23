@@ -54,7 +54,8 @@ def check_offensive_content_llm(text):
     response = model.generate_content(prompt)
     
     if isinstance(response, GenerateContentResponse):
-        return response.text
+        # Access the text content from the first candidate
+        return response.candidates[0].content.parts[0].text
     else:
         # Handle the case where the response is not of the expected type
         return "Error: Unable to analyze the content"
