@@ -1,15 +1,35 @@
 from flask import Flask, render_template, request, jsonify
 from googletrans import Translator
 from offensive_words import offensive_words
+import spacy
 
 app = Flask(__name__)
 translator = Translator()
+nlp = spacy.load("en_core_web_sm")
 
 # Supported languages for translation
 supported_languages = list(offensive_words.keys())
 
 def contains_offensive_word(text, word_list):
     return any(offensive_word in text for offensive_word in word_list)
+
+def analyze_text_sentiment(text):
+    doc = nlp(text)
+    sentiment_score = sum([token.sentiment for token in doc]) / len(doc)
+    return sentiment_score
+
+def is_offensive(text, lang_code):
+    # Check for offensive words
+    if contains_offensive_word(text, offensive_words.get(lang_code, [])):
+        return True
+    
+    # Analyze sentiment (for English only)
+    if lang_code == "english":
+        sentiment_score = analyze_text_sentiment(text)
+        if sentiment_score < -0.5:  # Adjust this threshold as needed
+            return True
+    
+    return False
 
 @app.route("/")
 def index():
@@ -29,12 +49,12 @@ def check_product_name():
             # Get the language name
             lang_name = translation.dest
 
-            # Check for offensive words using partial matching
-            is_offensive = contains_offensive_word(translated_name, offensive_words.get(lang_name, []))
+            # Check for offensive content using spaCy and custom logic
+            is_offensive_result = is_offensive(translated_name, lang_name)
 
             results[lang_name] = {
                 "translation": translated_name,
-                "is_offensive": is_offensive
+                "is_offensive": is_offensive_result
             }
         except Exception as e:
             # Log the error and continue with the next language
