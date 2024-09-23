@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const productNameInput = document.getElementById('productName');
     const checkButton = document.getElementById('checkButton');
     const resultsDiv = document.getElementById('results');
+    const alternativesDiv = document.getElementById('alternatives');
 
     checkButton.addEventListener('click', () => {
         const productName = productNameInput.value.trim();
@@ -36,7 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayResults(results) {
         resultsDiv.innerHTML = '';
+        alternativesDiv.innerHTML = '';
+        let isOffensive = false;
+
         for (const [language, data] of Object.entries(results)) {
+            if (language === 'alternative_suggestions') continue;
+
             const resultItem = document.createElement('div');
             resultItem.classList.add('result-item');
             resultItem.classList.add(data.is_offensive ? 'offensive' : 'safe');
@@ -54,6 +60,24 @@ document.addEventListener('DOMContentLoaded', () => {
             resultItem.appendChild(offensivePara);
 
             resultsDiv.appendChild(resultItem);
+
+            if (data.is_offensive) {
+                isOffensive = true;
+            }
+        }
+
+        if (isOffensive && results.alternative_suggestions) {
+            const alternativesHeader = document.createElement('h3');
+            alternativesHeader.textContent = 'Alternative Suggestions:';
+            alternativesDiv.appendChild(alternativesHeader);
+
+            const alternativesList = document.createElement('ul');
+            results.alternative_suggestions.forEach(suggestion => {
+                const listItem = document.createElement('li');
+                listItem.textContent = suggestion;
+                alternativesList.appendChild(listItem);
+            });
+            alternativesDiv.appendChild(alternativesList);
         }
     }
 });

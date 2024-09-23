@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, jsonify
 from googletrans import Translator
 from offensive_words import offensive_words
 import spacy
+import random
+import string
 
 app = Flask(__name__)
 translator = Translator()
@@ -31,6 +33,17 @@ def is_offensive(text, lang_code):
     
     return False
 
+def generate_alternative_names(product_name, num_suggestions=3):
+    alternatives = []
+    for _ in range(num_suggestions):
+        # Simple alternative generation: replace a random character with a random letter
+        chars = list(product_name)
+        index = random.randint(0, len(chars) - 1)
+        chars[index] = random.choice(string.ascii_lowercase)
+        alternative = ''.join(chars)
+        alternatives.append(alternative)
+    return alternatives
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -39,6 +52,7 @@ def index():
 def check_product_name():
     product_name = request.json["product_name"].lower()
     results = {}
+    is_offensive_in_any_language = False
 
     for lang_code in supported_languages:
         try:
@@ -56,6 +70,10 @@ def check_product_name():
                 "translation": translated_name,
                 "is_offensive": is_offensive_result
             }
+
+            if is_offensive_result:
+                is_offensive_in_any_language = True
+
         except Exception as e:
             # Log the error and continue with the next language
             print(f"Error translating to {lang_code}: {str(e)}")
@@ -63,6 +81,11 @@ def check_product_name():
                 "translation": "Translation failed",
                 "is_offensive": False
             }
+
+    # Generate alternative suggestions if the name is offensive in any language
+    if is_offensive_in_any_language:
+        alternative_suggestions = generate_alternative_names(product_name)
+        results["alternative_suggestions"] = alternative_suggestions
 
     return jsonify(results)
 

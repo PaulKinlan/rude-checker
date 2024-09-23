@@ -52,7 +52,7 @@ button:hover {
     background-color: #0056b3;
 }
 
-.results {
+.results, .alternatives {
     margin-top: 1rem;
 }
 
@@ -63,7 +63,7 @@ button:hover {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.result-item h3 {
+.result-item h3, .alternatives h3 {
     margin-top: 0;
     margin-bottom: 0.5rem;
     color: #333;
@@ -81,6 +81,18 @@ button:hover {
 .result-item.safe {
     background-color: #dff0d8;
     border-left: 5px solid #4caf50;
+}
+
+.alternatives ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.alternatives li {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background-color: #e9ecef;
+    border-radius: 3px;
 }
 
 @media (max-width: 480px) {
